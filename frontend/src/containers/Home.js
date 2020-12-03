@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import React, { useState } from "react";
+import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Spinner";
@@ -19,13 +18,11 @@ const Home = () => {
 
   const dispatch = useDispatch();
 
-
   const createUserData = useSelector((state) => state.createUser);
   const { loading, error } = createUserData;
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log( data);
     if (!data.phone) {
       setMessage("Phone no is required!");
     } else if (!data.SSN) {
@@ -33,22 +30,27 @@ const Home = () => {
     } else if (!data.firstName || !data.lastName) {
       setMessage("Name  is required!");
     } else {
-        dispatch(
-          createUser({
+      setMessage(null)
+      dispatch(
+        createUser(
+          {
             first_name: data.firstName,
             last_name: data.lastName,
-            phone:data.phone,
+            phone: data.phone,
             SSN: data.SSN,
-            address: data.SSN
-          })
-        );
+            address: data.SSN,
+          },
+          setdata,
+          setMessage
+        )
+      );
     }
   };
 
   return (
     <FormContainer>
       <h1>Add User</h1>
-      {message && <Message variant="danger">{message}</Message>}
+      {message && <Message >{message}</Message>}
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
@@ -102,7 +104,7 @@ const Home = () => {
           />
         </Form.Group>
 
-        <Button type="submit" variant="primary">
+        <Button disabled={loading} type="submit" variant="primary">
           Add User
         </Button>
       </Form>

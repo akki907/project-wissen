@@ -26,7 +26,7 @@ import {
   USER_UPDATE_REQUEST,
   CREATE_USER_SUCCESS,
   CREATE_USER_REQUEST,
-  CREATE_USER_FAIL
+  CREATE_USER_FAIL,
 } from "../constants/user";
 
 export const login = (postData) => async (dispatch) => {
@@ -34,7 +34,6 @@ export const login = (postData) => async (dispatch) => {
     dispatch({
       type: USER_LOGIN_REQUEST,
     });
-
 
     const { data } = await axios.post("/api/v1/users/login", postData);
 
@@ -69,10 +68,7 @@ export const register = (postData) => async (dispatch) => {
       type: USER_REGISTER_REQUEST,
     });
 
-    const { data } = await axios.post(
-      "/api/v1/users/register",
-      postData
-    );
+    const { data } = await axios.post("/api/v1/users/register", postData);
 
     dispatch({
       type: USER_REGISTER_SUCCESS,
@@ -96,23 +92,21 @@ export const register = (postData) => async (dispatch) => {
   }
 };
 
-export const createUser = (postData) => async (dispatch) => {
+export const createUser = (postData, setter ,message) => async (dispatch) => {
   try {
     dispatch({
       type: CREATE_USER_REQUEST,
     });
 
-    const { data } = await axios.post(
-      "/api/v1/users",
-      postData
-    );
+    const { data } = await axios.post("/api/v1/users", postData);
 
     dispatch({
       type: CREATE_USER_SUCCESS,
       payload: data,
     });
 
-
+    setter({ firstName: "", lastName: "", phone: "", SSN: "", address: "" });
+    message("User Created!")
   } catch (error) {
     dispatch({
       type: CREATE_USER_FAIL,
@@ -218,7 +212,7 @@ export const listUsers = (query) => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
-      params:query
+      params: query,
     };
 
     const { data } = await axios.get(`/api/v1/users/`, config);
