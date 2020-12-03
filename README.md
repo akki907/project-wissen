@@ -2,5 +2,11 @@
 
 yarn  and yarn client-install
 
+# RUN BOTH FRONTEND AND BACEND
+
+yarn dev
+
+
+
 
 
